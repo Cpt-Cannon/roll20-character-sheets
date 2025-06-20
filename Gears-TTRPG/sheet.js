@@ -1,44 +1,32 @@
-// ===== Gears Tactics Roll20 Sheet Workers =====
-
-// Utility: Calculate ability modifier from score
+// Utility to calculate modifiers
 const calculateModifier = (score) => Math.floor((score - 10) / 2);
 
-// List of ability scores
-const abilities = ["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"];
-
-// Update ability modifiers
-abilities.forEach((ability) => {
-  on(`change:${ability}`, function () {
-    getAttrs([ability], function (values) {
-      const score = parseInt(values[ability]) || 0;
-      const mod = calculateModifier(score);
-      const update = {};
-      update[`${ability}_mod`] = mod;
-      setAttrs(update);
-    });
+// Update all ability modifiers and initiative
+on("change:strength change:dexterity change:constitution change:intelligence change:wisdom change:charisma", () => {
+  getAttrs(["strength", "dexterity", "constitution", "intelligence", "wisdom", "charisma"], (values) => {
+    const updates = {
+      strength_mod: calculateModifier(parseInt(values.strength) || 0),
+      dexterity_mod: calculateModifier(parseInt(values.dexterity) || 0),
+      constitution_mod: calculateModifier(parseInt(values.constitution) || 0),
+      intelligence_mod: calculateModifier(parseInt(values.intelligence) || 0),
+      wisdom_mod: calculateModifier(parseInt(values.wisdom) || 0),
+      charisma_mod: calculateModifier(parseInt(values.charisma) || 0),
+      initiative: calculateModifier(parseInt(values.dexterity) || 0),
+    };
+    setAttrs(updates);
   });
 });
 
-// Auto-calculate initiative from dexterity_mod
-on("change:dexterity_mod", function () {
-  getAttrs(["dexterity_mod"], function (values) {
-    const init = parseInt(values.dexterity_mod) || 0;
-    setAttrs({ initiative: init });
+// Update weapon attack bonus based on chosen stat
+on("change:repeating_weapons:weapon_stat", (eventInfo) => {
+  const statAttr = eventInfo.newValue;
+
+  // Get the relevant modifier for selected stat
+  const rowPrefix = eventInfo.sourceAttribute.replace(/weapon_stat$/, "");
+  getAttrs([statAttr + "_mod"], (modValues) => {
+    const mod = modValues[statAttr + "_mod"] || "0";
+    const update = {};
+    update[`${rowPrefix}weapon_attack`] = mod;
+    setAttrs(update);
   });
 });
-
-// Auto-update weapon attack bonus if using STR or DEX mod
-on("change:repeating_weapons:weapon_stat", function (eventInfo) {
-  getAttrs(["repeating_weapons_weapon_stat"], function (values) {
-    const stat = values.repeating_weapons_weapon_stat;
-    const modAttr = `${stat}_mod`;
-    getAttrs([modAttr], function (mods) {
-      const mod = parseInt(mods[modAttr]) || 0;
-      const update = {};
-      update["repeating_weapons_weapon_attack"] = mod;
-      setAttrs(update);
-    });
-  });
-});
-
-// Optional: Add roll template support and skill calculations
