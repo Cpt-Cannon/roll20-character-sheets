@@ -1,54 +1,103 @@
-.sheet-main {
-  font-family: 'Roboto', sans-serif;
-  background: #111;
-  color: #f0f0f0;
-  padding: 10px;
+/* ===== Gears Tactics Sheet CSS ===== */
+
+/* Reset & Layout */
+input, select, textarea {
+  width: 100%;
+  margin-bottom: 5px;
+  box-sizing: border-box;
+  padding: 4px;
+  font-size: 12px;
 }
 
-.sheet-header {
-  text-align: center;
-  color: #f44336;
-  font-size: 1.8em;
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+h2, h3 {
+  margin: 10px 0 5px;
+  font-size: 16px;
+  border-bottom: 1px solid #555;
+  padding-bottom: 3px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.sheet-tabs {
+  display: flex;
   margin-bottom: 10px;
-  border-bottom: 2px solid #f44336;
+  border-bottom: 2px solid #999;
+  font-size: 14px;
 }
 
-.sheet-tab-nav {
-  margin-bottom: 15px;
-  text-align: center;
+.sheet-tab-control {
+  display: none;
 }
-.sheet-tab-nav input {
-  margin-right: 10px;
+
+.sheet-tabs span {
+  padding: 6px 12px;
+  cursor: pointer;
+  background: #ccc;
+  border: 1px solid #999;
+  border-bottom: none;
+  margin-right: 2px;
+  border-radius: 6px 6px 0 0;
+  user-select: none;
+}
+
+.sheet-tab-control:checked + span {
+  background: #fff;
+  border-bottom: 2px solid #fff;
+  font-weight: bold;
 }
 
 .sheet-tab-content {
   display: none;
+  padding: 10px;
+  border: 1px solid #999;
+  border-radius: 0 6px 6px 6px;
+  background: #f8f8f8;
 }
-input[name="attr_tab"][value="core"]:checked ~ .sheet-core,
-input[name="attr_tab"][value="combat"]:checked ~ .sheet-combat,
-input[name="attr_tab"][value="gear"]:checked ~ .sheet-gear {
+
+.sheet-tab-control[value="character"]:checked ~ .sheet-character,
+.sheet-tab-control[value="combat"]:checked ~ .sheet-combat,
+.sheet-tab-control[value="powers"]:checked ~ .sheet-powers,
+.sheet-tab-control[value="inventory"]:checked ~ .sheet-inventory,
+.sheet-tab-control[value="notes"]:checked ~ .sheet-notes {
   display: block;
 }
 
-.sheet-2col, .sheet-3col {
-  display: flex;
-  gap: 20px;
+.sheet-abilities {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 10px;
 }
-.sheet-col {
-  flex: 1;
+
+fieldset {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 10px;
+  margin: 10px 0;
+  background: #fff;
 }
-.sheet-col label {
-  display: block;
-  margin-bottom: 8px;
+
+button[type="roll"] {
+  background-color: #2e86de;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 12px;
+  cursor: pointer;
+  display: inline-block;
+  margin-top: 5px;
 }
-input[type="text"], input[type="number"], textarea {
-  width: 100%;
-  background: #222;
-  border: 1px solid #555;
-  border-radius: 4px;
-  padding: 5px;
-  color: #fff;
-}
-textarea {
-  resize: vertical;
+
+button[type="roll"]:hover {
+  background-color: #1b4f72;
 }
